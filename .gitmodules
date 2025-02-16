@@ -1,0 +1,3 @@
+[submodule "Cocoon-implementation"]
+	path = Cocoon-implementation
+	url = https://github.com/PLaSSticity/Cocoon-implementation.git
