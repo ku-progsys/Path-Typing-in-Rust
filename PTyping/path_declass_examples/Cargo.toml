@@ -1,0 +1,9 @@
+[package]
+name = "path_declass_examples"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+    rand = "0.9.0"
+    secret_macros = { path = "../../Cocoon-implementation/ifc_library/macros"}
+    secret_structs = { path = "../../Cocoon-implementation/ifc_library/secret_structs"}

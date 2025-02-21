@@ -1,0 +1,10 @@
+[package]
+name = "PTyping"
+version = "0.1.0"
+edition = "2024"
+
+members = [
+    "path_declass_examples",
+]
+
+[dependencies]
