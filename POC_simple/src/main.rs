@@ -1,6 +1,7 @@
 mod simple_1;
 mod simple_2;
 mod simple_3;
+mod simple_4;
 
 fn main() {
     let flag_simple1: bool = true;
@@ -11,4 +12,6 @@ fn main() {
     simple_2::run_simple2(flag_simple2);
     println!("\n\nSimple 3: \n");
     simple_3::run_simple3();
+    println!("\n\nSimple 4: \n");
+    simple_4::run_simple4("1234 address st.".to_string());
 }
