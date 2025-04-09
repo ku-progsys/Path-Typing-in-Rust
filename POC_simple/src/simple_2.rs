@@ -1,7 +1,7 @@
 
 pub fn run_simple2(flag: bool) {
     let new_user: User = User::new("jack", "jack@mail.com", "1232 Address st.", "111-11-1111");
-    let mut user_info: String;
+    let user_info: String;
     if flag {
         user_info = safe_get_usr_data(new_user);
     }

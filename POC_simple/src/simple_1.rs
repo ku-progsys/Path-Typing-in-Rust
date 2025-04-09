@@ -1,7 +1,7 @@
 
 pub fn run_simple1(flag: bool) {
     let mut usr_data: String = get_usr_data();
-    if flag {
+    if flag { // make implicit example similar 
         process_data(&usr_data);
     }
     else {
