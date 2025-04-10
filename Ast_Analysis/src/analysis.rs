@@ -42,7 +42,7 @@ pub fn get_fn_stmts(fn_item: syn::Item) -> Vec<syn::Stmt> {
         let block = func.block;
         //dbg!(&block);
         for stmt in block.stmts {
-            dbg!(&stmt);
+            //dbg!(&stmt);
             path_vec.push(stmt);
         }
     }
