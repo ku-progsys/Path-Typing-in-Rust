@@ -31,11 +31,21 @@ pub fn get_fn_item(ast: File) -> Option<syn::Item> {
     None
 }
 
-pub fn get_path(fn_item: syn::Item) -> Vec<syn::Item> {
+pub fn get_fn_stmts(fn_item: syn::Item) -> Vec<syn::Stmt> {
     /*-----------------------------------------
         step through the blocks w/in the top function,
             when you encounter: fn, or stmt (conditional)
                 add that block to the returned vector
-    -----------------------------------------/*
-    
+    -----------------------------------------*/
+    let mut path_vec: Vec<syn::Stmt> = Vec::<syn::Stmt>::new();
+    if let syn::Item::Fn(func) = fn_item {
+        let block = func.block;
+        //dbg!(&block);
+        for stmt in block.stmts {
+            dbg!(&stmt);
+            path_vec.push(stmt);
+        }
+    }
+
+    path_vec
 }
