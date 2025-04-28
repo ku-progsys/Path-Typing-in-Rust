@@ -1,7 +1,8 @@
 use std::fs;
 use std::io;
+use syn::Expr;
 use syn::{parse_file, File};
-
+use syn::visit::{self, Visit};
 
 pub fn get_ast(file_path: String) -> File {
     let source = fs::read_to_string(file_path).expect("Failed to read file path");
@@ -23,7 +24,7 @@ pub fn get_fn_item(ast: File) -> Option<syn::Item> {
     for item in ast.items {
         if let syn::Item::Fn(func) = item {
             if func.sig.ident.to_string() == function_to_analyze.trim() {
-                return Some(syn::Item::Fn(func));
+               return Some(syn::Item::Fn(func));
             }
         }
     }
@@ -48,4 +49,62 @@ pub fn get_fn_stmts(fn_item: syn::Item) -> Vec<syn::Stmt> {
     }
 
     path_vec
+}
+
+pub fn gather_path<'ast>(node: &'ast syn::Stmt) -> Option<Vec<syn::Expr>> {
+    let mut prog_trace = Vec::new();
+    if gather_prog_trace(node, &mut prog_trace) {
+        return Some(prog_trace);
+    } 
+    None
+}
+
+pub fn gather_prog_trace<'ast>(node: &'ast syn::Stmt, trace: &mut Vec<Expr>) -> bool {
+
+    struct DeclassifyVisitor<'a> {
+        trace: &'a mut Vec<Expr>,
+        found: bool,
+    }
+
+    impl<'ast> Visit<'ast> for DeclassifyVisitor<'_> {
+        fn visit_expr(&mut self, expr: &'ast Expr) {
+            if let Expr::Call(call) = expr {
+                if let Expr::Path(ref path_expr) = *call.func {
+                    if let Some(seg) = path_expr.path.segments.first() {
+                        if seg.ident == "declassify" {
+                            self.found = true;
+                            self.trace.push(expr.clone());
+                            return;
+                        }
+                    }
+                }
+            }
+            self.trace.push(expr.clone());
+
+            visit::visit_expr(self, expr);
+            if self.found {
+                self.trace.push(expr.clone());
+            }
+        }
+        fn visit_stmt(&mut self, stmt: &syn::Stmt) {
+            visit::visit_stmt(self, stmt);
+        }
+    }
+    let mut visitor = DeclassifyVisitor {
+        trace,
+        found: false,
+    };
+    visitor.visit_stmt(node);
+    visitor.found
+}
+
+pub fn is_declassify(fn_stmt: syn::Stmt) -> bool {
+    if let syn::Stmt::Expr(syn::Expr::Call(expr_call), _) = fn_stmt {
+        if let syn::Expr::Path(expr_path) = *expr_call.func {
+            if let Some(path_segment) = expr_path.path.segments.first() {
+                return path_segment.ident == "declassify";
+            }
+        }
+    }
+    false
 }
