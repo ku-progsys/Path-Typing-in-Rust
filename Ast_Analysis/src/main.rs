@@ -24,7 +24,10 @@ fn main() {
         
     }
     //dbg!(path_vec);
-    dbg!(locals);
     println!("\n\n");
+    println!("-------------DEBUG-----------\n\n");
+    println!("{}", locals[0]);
+    println!("{}", locals[1]);
+    dbg!(locals);
     dbg!(exprs);
 }

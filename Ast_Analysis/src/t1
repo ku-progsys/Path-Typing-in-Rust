@@ -1,11 +1,61 @@
-3
+4
 stmt is Local data
-stmt.pat:
-Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }
-matched on syn::Pat::Ident : PatIdent { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }
+loc_type node found: PatType { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }
+[src/item_abs.rs:117:17] &loc_type.ty = Type::Path {
+    qself: None,
+    path: Path {
+        leading_colon: None,
+        segments: [
+            PathSegment {
+                ident: Ident(
+                    String,
+                ),
+                arguments: PathArguments::None,
+            },
+        ],
+    },
+}
+
+loc path found
+
+stmt is Local data
+loc_type node found: PatType { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: None, ident: Ident(data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(i32), arguments: PathArguments::None }] } } }
+[src/item_abs.rs:117:17] &loc_type.ty = Type::Path {
+    qself: None,
+    path: Path {
+        leading_colon: None,
+        segments: [
+            PathSegment {
+                ident: Ident(
+                    i32,
+                ),
+                arguments: PathArguments::None,
+            },
+        ],
+    },
+}
+
+loc path found
+
 expression is if
 expression is call
-[src/main.rs:27:5] locals = [
+
+
+
+-------------DEBUG-----------
+
+
+Stmt{
+        id: "usr_data"
+        stmt_type: LOCAL
+        value_type: STRING
+    }
+Stmt{
+        id: "data"
+        stmt_type: LOCAL
+        value_type: INT32
+    }
+[src/main.rs:31:5] locals = [
     LocalStmt {
         raw_stmt: Stmt::Local {
             attrs: [],
@@ -74,13 +124,68 @@ expression is call
         id: Some(
             "usr_data",
         ),
-        value_type: None,
+        value_type: Some(
+            STRING,
+        ),
+    },
+    LocalStmt {
+        raw_stmt: Stmt::Local {
+            attrs: [],
+            let_token: Let,
+            pat: Pat::Type {
+                attrs: [],
+                pat: Pat::Ident {
+                    attrs: [],
+                    by_ref: None,
+                    mutability: None,
+                    ident: Ident(
+                        data,
+                    ),
+                    subpat: None,
+                },
+                colon_token: Colon,
+                ty: Type::Path {
+                    qself: None,
+                    path: Path {
+                        leading_colon: None,
+                        segments: [
+                            PathSegment {
+                                ident: Ident(
+                                    i32,
+                                ),
+                                arguments: PathArguments::None,
+                            },
+                        ],
+                    },
+                },
+            },
+            init: Some(
+                LocalInit {
+                    eq_token: Eq,
+                    expr: Expr::Lit {
+                        attrs: [],
+                        lit: Lit::Int {
+                            token: 12,
+                        },
+                    },
+                    diverge: None,
+                },
+            ),
+            semi_token: Semi,
+        },
+        stmt_type: LOCAL,
+        fmt_stmt: Some(
+            "Local { attrs: [], let_token: Let, pat: Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: None, ident: Ident(data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(i32), arguments: PathArguments::None }] } } }, init: Some(LocalInit { eq_token: Eq, expr: Expr::Lit { attrs: [], lit: Lit::Int { token: 12 } }, diverge: None }), semi_token: Semi }",
+        ),
+        id: Some(
+            "data",
+        ),
+        value_type: Some(
+            INT32,
+        ),
     },
 ]
-
-
-
-[src/main.rs:29:5] exprs = [
+[src/main.rs:32:5] exprs = [
     ExprAbstract {
         raw_expr: Expr::If {
             attrs: [],
