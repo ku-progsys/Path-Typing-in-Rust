@@ -11,15 +11,12 @@ pub fn get_ast(file_path: String) -> File {
 }
 
 // call this for top-level function you would like to analyze 
-pub fn get_fn_item(ast: File) -> Option<syn::Item> {
+pub fn get_fn_item(ast: File, function_to_analyze: String) -> Option<syn::Item> {
     /*-----------------------------------------
         Steps: 
             iterate through the ast 
                 extract the function which should be analyzed's node (not necessarily a main function)  
     -----------------------------------------*/
-    println!("Enter Function to be Analyzed: ");
-    let mut function_to_analyze: String = String::new(); // enter top level fn to analyze
-    io::stdin().read_line(&mut function_to_analyze).expect("Failed to read line");
 
     for item in ast.items {
         if let syn::Item::Fn(func) = item {

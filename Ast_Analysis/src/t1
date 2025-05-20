@@ -1,0 +1,273 @@
+3
+stmt is Local data
+stmt.pat:
+Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }
+matched on syn::Pat::Ident : PatIdent { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }
+expression is if
+expression is call
+[src/main.rs:27:5] locals = [
+    LocalStmt {
+        raw_stmt: Stmt::Local {
+            attrs: [],
+            let_token: Let,
+            pat: Pat::Type {
+                attrs: [],
+                pat: Pat::Ident {
+                    attrs: [],
+                    by_ref: None,
+                    mutability: Some(
+                        Mut,
+                    ),
+                    ident: Ident(
+                        usr_data,
+                    ),
+                    subpat: None,
+                },
+                colon_token: Colon,
+                ty: Type::Path {
+                    qself: None,
+                    path: Path {
+                        leading_colon: None,
+                        segments: [
+                            PathSegment {
+                                ident: Ident(
+                                    String,
+                                ),
+                                arguments: PathArguments::None,
+                            },
+                        ],
+                    },
+                },
+            },
+            init: Some(
+                LocalInit {
+                    eq_token: Eq,
+                    expr: Expr::Call {
+                        attrs: [],
+                        func: Expr::Path {
+                            attrs: [],
+                            qself: None,
+                            path: Path {
+                                leading_colon: None,
+                                segments: [
+                                    PathSegment {
+                                        ident: Ident(
+                                            get_usr_data,
+                                        ),
+                                        arguments: PathArguments::None,
+                                    },
+                                ],
+                            },
+                        },
+                        paren_token: Paren,
+                        args: [],
+                    },
+                    diverge: None,
+                },
+            ),
+            semi_token: Semi,
+        },
+        stmt_type: LOCAL,
+        fmt_stmt: Some(
+            "Local { attrs: [], let_token: Let, pat: Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }, init: Some(LocalInit { eq_token: Eq, expr: Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(get_usr_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [] }, diverge: None }), semi_token: Semi }",
+        ),
+        id: Some(
+            "usr_data",
+        ),
+        value_type: None,
+    },
+]
+
+
+
+[src/main.rs:29:5] exprs = [
+    ExprAbstract {
+        raw_expr: Expr::If {
+            attrs: [],
+            if_token: If,
+            cond: Expr::Path {
+                attrs: [],
+                qself: None,
+                path: Path {
+                    leading_colon: None,
+                    segments: [
+                        PathSegment {
+                            ident: Ident(
+                                flag,
+                            ),
+                            arguments: PathArguments::None,
+                        },
+                    ],
+                },
+            },
+            then_branch: Block {
+                brace_token: Brace,
+                stmts: [
+                    Stmt::Expr(
+                        Expr::Call {
+                            attrs: [],
+                            func: Expr::Path {
+                                attrs: [],
+                                qself: None,
+                                path: Path {
+                                    leading_colon: None,
+                                    segments: [
+                                        PathSegment {
+                                            ident: Ident(
+                                                process_data,
+                                            ),
+                                            arguments: PathArguments::None,
+                                        },
+                                    ],
+                                },
+                            },
+                            paren_token: Paren,
+                            args: [
+                                Expr::Reference {
+                                    attrs: [],
+                                    and_token: And,
+                                    mutability: None,
+                                    expr: Expr::Path {
+                                        attrs: [],
+                                        qself: None,
+                                        path: Path {
+                                            leading_colon: None,
+                                            segments: [
+                                                PathSegment {
+                                                    ident: Ident(
+                                                        usr_data,
+                                                    ),
+                                                    arguments: PathArguments::None,
+                                                },
+                                            ],
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                        Some(
+                            Semi,
+                        ),
+                    ),
+                ],
+            },
+            else_branch: Some(
+                (
+                    Else,
+                    Expr::Block {
+                        attrs: [],
+                        label: None,
+                        block: Block {
+                            brace_token: Brace,
+                            stmts: [
+                                Stmt::Expr(
+                                    Expr::Call {
+                                        attrs: [],
+                                        func: Expr::Path {
+                                            attrs: [],
+                                            qself: None,
+                                            path: Path {
+                                                leading_colon: None,
+                                                segments: [
+                                                    PathSegment {
+                                                        ident: Ident(
+                                                            sanitize_secret,
+                                                        ),
+                                                        arguments: PathArguments::None,
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                        paren_token: Paren,
+                                        args: [
+                                            Expr::Reference {
+                                                attrs: [],
+                                                and_token: And,
+                                                mutability: Some(
+                                                    Mut,
+                                                ),
+                                                expr: Expr::Path {
+                                                    attrs: [],
+                                                    qself: None,
+                                                    path: Path {
+                                                        leading_colon: None,
+                                                        segments: [
+                                                            PathSegment {
+                                                                ident: Ident(
+                                                                    usr_data,
+                                                                ),
+                                                                arguments: PathArguments::None,
+                                                            },
+                                                        ],
+                                                    },
+                                                },
+                                            },
+                                        ],
+                                    },
+                                    Some(
+                                        Semi,
+                                    ),
+                                ),
+                            ],
+                        },
+                    },
+                ),
+            ),
+        },
+        expr_type: IF,
+        fmt_expr: Some(
+            "Expr::If { attrs: [], if_token: If, cond: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, then_branch: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(process_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] }, else_branch: Some((Else, Expr::Block { attrs: [], label: None, block: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(sanitize_secret), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: Some(Mut), expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] } })) }",
+        ),
+        path_cond: None,
+        fn_called: None,
+    },
+    ExprAbstract {
+        raw_expr: Expr::Call {
+            attrs: [],
+            func: Expr::Path {
+                attrs: [],
+                qself: None,
+                path: Path {
+                    leading_colon: None,
+                    segments: [
+                        PathSegment {
+                            ident: Ident(
+                                declassify,
+                            ),
+                            arguments: PathArguments::None,
+                        },
+                    ],
+                },
+            },
+            paren_token: Paren,
+            args: [
+                Expr::Reference {
+                    attrs: [],
+                    and_token: And,
+                    mutability: None,
+                    expr: Expr::Path {
+                        attrs: [],
+                        qself: None,
+                        path: Path {
+                            leading_colon: None,
+                            segments: [
+                                PathSegment {
+                                    ident: Ident(
+                                        usr_data,
+                                    ),
+                                    arguments: PathArguments::None,
+                                },
+                            ],
+                        },
+                    },
+                },
+            ],
+        },
+        expr_type: CALL,
+        fmt_expr: Some(
+            "Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(declassify), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }",
+        ),
+        path_cond: None,
+        fn_called: None,
+    },
+]
