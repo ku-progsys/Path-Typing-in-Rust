@@ -28,6 +28,7 @@ fn main() {
     println!("-------------DEBUG-----------\n\n");
     println!("{}", locals[0]);
     println!("{}", locals[1]);
-    dbg!(locals);
-    dbg!(exprs);
+    //dbg!(locals);
+    //dbg!(exprs);
+    println!("{}", exprs[0]);
 }
