@@ -146,6 +146,7 @@ pub struct ExprAbstract {
     fmt_expr: Option<String>,
     path_cond: Option<String>,
     fn_called: Option<String>,
+    branch: Option<Vec<syn::Expr>>,
 }
     
 impl fmt::Display for ExprAbstract {
@@ -169,7 +170,8 @@ impl ExprAbstract {
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
                     path_cond: None,
-                    fn_called: None                
+                    fn_called: None,     
+                    branch: None,           
                 }
             }
             syn::Expr::If {..} => {
@@ -181,7 +183,9 @@ impl ExprAbstract {
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
                     path_cond: None,
-                    fn_called: None                
+                    fn_called: None,
+                    branch: None,    
+                                
                 }
             }
             syn::Expr::While {..} => {
@@ -193,7 +197,8 @@ impl ExprAbstract {
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
                     path_cond: None,
-                    fn_called: None                
+                    fn_called: None,
+                    branch: None,                
                 }
             }
             _ => {
@@ -205,7 +210,8 @@ impl ExprAbstract {
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
                     path_cond: None,
-                    fn_called: None
+                    fn_called: None,
+                    branch: None,
                 }
             }
         }
