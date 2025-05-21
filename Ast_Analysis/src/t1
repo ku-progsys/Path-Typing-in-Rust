@@ -3,24 +3,40 @@ stmt is Local data
 stmt is Local data
 expression is if
 expression is call
-
-
-
 -------------DEBUG-----------
 
-
-Stmt{
-            id: "secret"
-            stmt_type: LOCAL
-            value_type: STRING
-            taint: true
-            }
-Stmt{
-            id: "data"
-            stmt_type: LOCAL
-            value_type: INT32
-            taint: false
-            }
+Expr::If
+[src/item_abs.rs:257:21] &cond = Path {
+    leading_colon: None,
+    segments: [
+        PathSegment {
+            ident: Ident(
+                data,
+            ),
+            arguments: PathArguments::None,
+        },
+    ],
+}
+[src/item_abs.rs:259:25] &path_id = Ident(
+    data,
+)
 Expr{
         expr_type: IF
+        path_cond: Expr{
+        left: "data"
+        op: ""
+        right: "Lit::Int { token: 23 }"
     }
+    }
+
+
+Expr{
+        expr_type: CALL
+        path_cond: Expr{
+        left: ""
+        op: ""
+        right: ""
+    }
+    }
+
+

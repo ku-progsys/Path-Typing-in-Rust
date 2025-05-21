@@ -89,7 +89,7 @@ impl fmt::Display for LocalStmt {
             }
             "syn::Stmt::Local not matched".to_string()
         }
-        fn parse_ident(ident: &str) -> Option<String> {
+        pub fn parse_ident(ident: &str) -> Option<String> {
             let mut ret_str = String::new();
             let mut raw_str = ident.chars();
             while let Some(ref mut ch) = raw_str.next() {
@@ -139,23 +139,27 @@ enum ExprType {
     WHILE,
     NOT_TRACKED,
 }
+
 #[derive(Debug)]
 pub struct ExprAbstract {
     raw_expr: syn::Expr,
     expr_type: ExprType, 
     fmt_expr: Option<String>,
-    path_cond: Option<String>,
+    path_cond: Option<PathCond>,
     fn_called: Option<String>,
     branch: Option<Vec<syn::Expr>>,
 }
-    
 impl fmt::Display for ExprAbstract {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, r#"Expr{{
         expr_type: {:?}
-    }}"#, self.expr_type)
+        path_cond: {}
+    }}"#, self.expr_type, self.path_cond.clone().unwrap())
     }
 }
+
+
+
 
 impl ExprAbstract {
     pub fn new(process_expr: syn::Expr) -> Self {
@@ -182,7 +186,7 @@ impl ExprAbstract {
                     raw_expr: process_expr,
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
-                    path_cond: None,
+                    path_cond: Some(PathCond::new()),
                     fn_called: None,
                     branch: None,    
                                 
@@ -196,7 +200,7 @@ impl ExprAbstract {
                     raw_expr: process_expr,
                     expr_type: expr_type,
                     fmt_expr: Some(formatted_expr),
-                    path_cond: None,
+                    path_cond: Some(PathCond::new()),
                     fn_called: None,
                     branch: None,                
                 }
@@ -208,7 +212,7 @@ impl ExprAbstract {
                 Self {
                     raw_expr: process_expr,
                     expr_type: expr_type,
-                    fmt_expr: Some(formatted_expr),
+                    fmt_expr: None,
                     path_cond: None,
                     fn_called: None,
                     branch: None,
@@ -216,6 +220,104 @@ impl ExprAbstract {
             }
         }
     }
+    
+    pub fn get_path_cond(&mut self) {
+        let expr = self.raw_expr.clone();
+        // if expr == None {
+        //     self.path_cond = None;
+        //     return;
+        // }
+        let mut path_condition: PathCond = PathCond::new();
+        /*-------------------
+            here i will need to make sure process_cond is only called on conditional expressions
+        -------------------*/
+        path_condition = Self::process_cond(self.raw_expr.clone(), &mut path_condition);
+        //dbg!(&path_condition);
+        self.path_cond = Some(path_condition);
+    }
 
+    /*----------------------------
+    process_if_cond will extract condition and operation type from 
+        - nested path conds need to be handled elsewhere (I believe)
+    ----------------------------*/
+    fn process_cond(expr: syn::Expr, path_condition: &mut PathCond) -> PathCond { 
+        let mut path_cond = path_condition.clone();
+        if let syn::Expr::If(if_expr) = expr.clone() {
+            println!("Expr::If");
+            //dbg!(&if_expr);
+            let next_expr = if_expr.clone();
+            path_cond.raw_expr = Some(syn::Expr::If(if_expr));
+            if let syn::Expr::Binary(bin_expr) = *next_expr.cond {
+                //dbg!(&bin_expr);
+                // get left 
+                if let syn::Expr::Path(left_expr) = *bin_expr.left {
+                    //dbg!(&left_expr);
+                    // check Path {PathSegment} for Ident or literal
+                    let cond = left_expr.path;
+                    dbg!(&cond);
+                    if let syn::PathSegment{ident: path_id, arguments: path_seg} = &cond.segments[0] {
+                        dbg!(&path_id);
+                        let left_cond_id = format!("{:?}", path_id);
+                        let left_cond_id = LocalStmt::parse_ident(&left_cond_id).expect("couldn't parse ident");
+                        path_cond.left = Some(left_cond_id);
+                    }                    
+                    
+                    if let syn::Expr::Lit(right_expr) = *bin_expr.right {
+                        let cond = right_expr.lit;
+                        let cond = format!("{:?}", cond);
+                        path_cond.right = Some(cond);
+                    } 
+                    else {
+                        println!("didn't match right_expr");
+                    }
+                }
+                else {
+                    println!("didn't match left_expr");
+                }
+            }
+        }
+        if let syn::Expr::While(while_expr) = expr.clone() {
+            println!("Expr::While");
+            path_cond.raw_expr = Some(syn::Expr::While(while_expr));
+        }
+
+        path_cond
+    }
     
 }
+
+#[derive(Clone, Debug)]
+pub struct PathCond {
+    raw_expr: Option<syn::Expr>,
+    left: Option<String>,
+    op: Option<String>,
+    op_type: Option<String>,
+    right: Option<String>,
+    nested: Option<Box<PathCond>>,
+}
+impl fmt::Display for PathCond {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, r#"Expr{{
+        left: {:?}
+        op: {:?}
+        right: {:?}
+    }}"#, 
+    self.left.clone().unwrap(),
+    self.op.clone().unwrap(),
+    self.right.clone().unwrap())
+    }
+}
+
+impl PathCond {
+    pub fn new() -> Self {
+        Self {
+            raw_expr: None,
+            left: Some(String::new()),
+            op: Some(String::new()),
+            op_type: Some(String::new()),
+            right: Some(String::new()),
+            nested: None,
+        }
+    }
+}
+    

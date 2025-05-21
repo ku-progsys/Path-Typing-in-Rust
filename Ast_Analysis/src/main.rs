@@ -24,11 +24,15 @@ fn main() {
         
     }
     //dbg!(path_vec);
-    println!("\n\n");
-    println!("-------------DEBUG-----------\n\n");
-    println!("{}", locals[0]);
-    println!("{}", locals[1]);
+    println!("-------------DEBUG-----------\n");
+    //println!("{}", locals[0]);
+    //println!("{}", locals[1]);
     //dbg!(locals);
     //dbg!(exprs);
-    println!("{}", exprs[0]);
+    //dbg!(&exprs);
+    for i in 0..exprs.len() {
+        //dbg!(&exprs[i]);
+        exprs[i].get_path_cond();
+        println!("{}\n\n", exprs[i]);
+    }
 }
