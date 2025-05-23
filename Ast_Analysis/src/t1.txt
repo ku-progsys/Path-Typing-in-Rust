@@ -1,0 +1,21 @@
+/*--------------------------------
+THIS IS PATH_VEC AFTER GET FN_STMTS
+--------------------------------*/
+
+Enter Function to be Analyzed: 
+run_simple1
+3
+Stmt::Local { attrs: [], let_token: Let, pat: Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }, init: Some(LocalInit { eq_token: Eq, expr: Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(get_usr_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [] }, diverge: None }), semi_token: Semi }
+
+
+Stmt::Expr(Expr::If { attrs: [], if_token: If, cond: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, then_branch: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(process_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] }, else_branch: Some((Else, Expr::Block { attrs: [], label: None, block: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(sanitize_secret), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: Some(Mut), expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] } })) }, None)
+
+
+Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(declassify), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))
+
+/*--------------------------------
+THIS IS THE TRACE AFTER GATHER_PATH
+--------------------------------*/
+
+Trace to declassify: 
+Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(declassify), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }

@@ -58,6 +58,23 @@ impl fmt::Display for LocalStmt {
                         taint: Some(assigned_taint),
                     }
                 }
+                // this function currently accepts a known local statement, so this should never be called
+                _ => {
+                    let type_of_stmt: LocalType = LocalType::NOT_TRACKED;
+                    let formatted_stmt = format!("{:?}", process_stmt);
+                    let local_id = None;
+                    let value_type = None;
+                    let assigned_taint = false;
+                    Self {
+                        raw_stmt: syn::Stmt::Local(process_stmt),
+                        stmt_type: type_of_stmt,
+                        fmt_stmt: Some(formatted_stmt),
+                        id: local_id,
+                        value_type: value_type,
+                        taint: Some(assigned_taint),
+                    }
+
+                }
             }
         }
         
@@ -254,10 +271,23 @@ impl ExprAbstract {
                 now, we need to get nested path conditions 
                     ex: data == 23 && (flag == false) || false
                     both left and right Exprs can have nested Exprs
-                    this is the time when I may need to write a new function to handle nested path conds
-                this will involve calling a fn proc_op_arg(the current PathCond) -> PathCond
-                    call this function while there is a left or right branch to be processed
-                much of the following code this will be cleaned up by this process
+                idea 1:
+                    - write a new function to handle nested path conds
+                        - this will involve calling a fn proc_op_arg(the current PathCond) -> PathCond
+                idea 2:
+                    - call this function while there is a left or right branch to be processed
+                        - much of the following code this will be cleaned up by this process
+                    - should be able to cast any inheriting classes to their parent class and then 
+                      this function will work as is. 
+                    - something like 
+                        let nested_cond = PathCond::new();
+                        process_cond(left/right_expr, nested_cond);
+                        self.nested = nested_cond;
+                    PROBLEM - type of nested is Option(<Box<PathCond>>)
+                        - this does not capture both left and right nested conditions
+                        - change type of PathCond::nested to Option(<Box<(PathCond, PathCond)>>)
+                            - a tuple of PathConds, left and right? 
+                        - OR change PathCond::nested to being PathCond::nested_left, PathCond::nested_right? 
                 ------------------*/
                 if let syn::Expr::Path(left_expr) = *bin_expr.left {
                     //dbg!(&left_expr);
