@@ -265,20 +265,17 @@ impl ExprAbstract {
             let next_expr = if_expr.clone();
             path_cond.raw_expr = Some(syn::Expr::If(if_expr));
             if let syn::Expr::Binary(bin_expr) = *next_expr.cond {
-                //dbg!(&bin_expr);
+                dbg!(&bin_expr);
                 // get left 
                 /*------------------
                 now, we need to get nested path conditions 
                     ex: data == 23 && (flag == false) || false
                     both left and right Exprs can have nested Exprs
-                idea 1:
-                    - write a new function to handle nested path conds
-                        - this will involve calling a fn proc_op_arg(the current PathCond) -> PathCond
-                idea 2:
+                idea 0:
                     - call this function while there is a left or right branch to be processed
                         - much of the following code this will be cleaned up by this process
                     - should be able to cast any inheriting classes to their parent class and then 
-                      this function will work as is. 
+                        this function will work as is. 
                     - something like 
                         let nested_cond = PathCond::new();
                         process_cond(left/right_expr, nested_cond);
@@ -288,26 +285,63 @@ impl ExprAbstract {
                         - change type of PathCond::nested to Option(<Box<(PathCond, PathCond)>>)
                             - a tuple of PathConds, left and right? 
                         - OR change PathCond::nested to being PathCond::nested_left, PathCond::nested_right? 
+                idea 1:
+                    - write a new function to handle nested path conds
+                        - this will involve calling a fn proc_op_arg(the current PathCond) -> PathCond
                 ------------------*/
+                let mut nested_conds: (PathCond, PathCond);
                 if let syn::Expr::Path(left_expr) = *bin_expr.left {
-                    //dbg!(&left_expr);
+                    dbg!(&left_expr);
                     // check Path {PathSegment} for Ident or literal
-                    let cond = left_expr.path;
+                    let cond = left_expr.clone().path;
+                    //let mut left_nested = PathCond::new();
+                    //Self::process_cond(syn::Expr::Path(left_expr), &mut left_nested);
+                    println!("left_nested: ");
+                    //dbg!(left_nested);
+                    println!("continue");
                     //dbg!(&cond);
-                    
                     // if PathSegment, then we have a variable in path condition
                     if let syn::PathSegment{ident: path_id, ..} = &cond.segments[0] {
-                        //dbg!(&path_id);
+                        dbg!(&path_id);
                         let left_cond_id = format!("{:?}", path_id);
                         let left_cond_id = LocalStmt::parse_ident(&left_cond_id).expect("couldn't parse ident");
                         path_cond.left = Some(left_cond_id);
-                    }                    
+                        
+                    }                
                     // if Lit, then we have a literal value in path condition 
                     if let syn::Expr::Lit(right_expr) = *bin_expr.right {
+                        //dbg!(&right_expr);
                         let cond = right_expr.lit;
                         let cond = format!("{:?}", cond);
                         path_cond.right = Some(cond);
                     }
+                } else if let syn::Expr::Binary(left_expr) = *bin_expr.left {
+                    //dbg!(&left_expr);
+                    // check Path {PathSegment} for Ident or literal
+                    //let cond = left_expr.clone().path;
+                    let mut left_nested = PathCond::new();
+                    Self::process_cond(syn::Expr::Binary(left_expr), &mut left_nested);
+                    println!("left_nested: ");
+                    dbg!(left_nested);
+                    println!("continue");
+                    //dbg!(&cond);
+                    // if PathSegment, then we have a variable in path condition
+                    // if let syn::PathSegment{ident: path_id, ..} = &cond.segments[0] {
+                    //     dbg!(&path_id);
+                    //     let left_cond_id = format!("{:?}", path_id);
+                    //     let left_cond_id = LocalStmt::parse_ident(&left_cond_id).expect("couldn't parse ident");
+                    //     path_cond.left = Some(left_cond_id);
+                        
+                    // }                
+                    // // if Lit, then we have a literal value in path condition 
+                    // if let syn::Expr::Lit(right_expr) = *bin_expr.right {
+                    //     let mut right_nested = PathCond::new();
+                    //     Self::process_cond(syn::Expr::)
+                    //     dbg!(&right_expr);
+                    //     let cond = right_expr.lit;
+                    //     let cond = format!("{:?}", cond);
+                    //     path_cond.right = Some(cond);
+                    // }
                 }
                 /*------------------
                 here we need to get the op of the expression 
@@ -354,7 +388,7 @@ pub struct PathCond {
     op: Option<String>,
     op_type: Option<String>,
     right: Option<String>,
-    nested: Option<Box<PathCond>>,
+    nested: Option<Box<(PathCond, PathCond)>>,
 }
 impl fmt::Display for PathCond {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -363,11 +397,13 @@ impl fmt::Display for PathCond {
         left: {:?}
         op: {:?}
         right: {:?}
+        nested: {:?}
     }}"#,
     self.id.clone().unwrap_or("None".to_string()), 
     self.left.clone().unwrap(),
     self.op.clone().unwrap(),
-    self.right.clone().unwrap())
+    self.right.clone().unwrap(),
+    self.nested.clone())
     }
 }
 

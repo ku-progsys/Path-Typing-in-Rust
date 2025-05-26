@@ -1,16 +1,112 @@
-3
+4
+stmt is Local data
 stmt is Local data
 expression is if
 expression is call
 -------------DEBUG-----------
 
+[src/item_abs.rs:268:17] &bin_expr = ExprBinary {
+    attrs: [],
+    left: Expr::Binary {
+        attrs: [],
+        left: Expr::Path {
+            attrs: [],
+            qself: None,
+            path: Path {
+                leading_colon: None,
+                segments: [
+                    PathSegment {
+                        ident: Ident(
+                            data,
+                        ),
+                        arguments: PathArguments::None,
+                    },
+                ],
+            },
+        },
+        op: BinOp::Eq(
+            EqEq,
+        ),
+        right: Expr::Lit {
+            attrs: [],
+            lit: Lit::Int {
+                token: 13,
+            },
+        },
+    },
+    op: BinOp::And(
+        AndAnd,
+    ),
+    right: Expr::Path {
+        attrs: [],
+        qself: None,
+        path: Path {
+            leading_colon: None,
+            segments: [
+                PathSegment {
+                    ident: Ident(
+                        flag,
+                    ),
+                    arguments: PathArguments::None,
+                },
+            ],
+        },
+    },
+}
+[src/item_abs.rs:319:21] &left_expr = ExprBinary {
+    attrs: [],
+    left: Expr::Path {
+        attrs: [],
+        qself: None,
+        path: Path {
+            leading_colon: None,
+            segments: [
+                PathSegment {
+                    ident: Ident(
+                        data,
+                    ),
+                    arguments: PathArguments::None,
+                },
+            ],
+        },
+    },
+    op: BinOp::Eq(
+        EqEq,
+    ),
+    right: Expr::Lit {
+        attrs: [],
+        lit: Lit::Int {
+            token: 13,
+        },
+    },
+}
+left_nested: 
+[src/item_abs.rs:325:21] left_nested = PathCond {
+    raw_expr: None,
+    id: None,
+    left: Some(
+        "",
+    ),
+    op: Some(
+        "",
+    ),
+    op_type: Some(
+        "",
+    ),
+    right: Some(
+        "",
+    ),
+    nested: None,
+}
+continue
 Expr{
         expr_type: IF
         path_cond: Expr{
         id: "None"
         left: ""
-        op: ""
+        op: "BinOp::And(AndAnd)"
         right: ""
+        nested: None
     }
     }
 
@@ -23,6 +119,7 @@ Expr{
         left: ""
         op: ""
         right: ""
+        nested: None
     }
     }
 
