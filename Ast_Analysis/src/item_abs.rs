@@ -246,20 +246,27 @@ impl ExprAbstract {
             //println!("Expr::If");
             //dbg!(&if_expr);
             let next_expr = if_expr.clone();
-            path_cond.raw_expr = Some(syn::Expr::If(if_expr));
+            path_cond.raw_expr = Some(syn::Expr::If(if_expr.clone()));
+            // cond can be either Path or Binary 
             if let syn::Expr::Binary(bin_expr) = *next_expr.cond {
-                //dbg!(&bin_expr);
+                
+                dbg!(&bin_expr);
                 // get left 
                 /*------------------
                 now, we need to get nested path conditions 
                     ex: data == 23 && (flag == false) || false
                     both left and right Exprs can have nested Exprs
                     this is the time when I may need to write a new function to handle nested path conds
-                this will involve calling a fn proc_op_arg(the current PathCond) -> PathCond
-                    call this function while there is a left or right branch to be processed
+                this will involve calling a fn process_bin_op(cur_bin_expr, nested_path_cond: PathCond) -> PathCond
+                    - call this function while there is a left or right branch to be processed 
+                    - change type of nested to be a tuple of PathConds (left and right)
+                    - process_bin_op will recursively call itself while there is a left/right binary expr to process
+                    - should clean up code of process_cond after initial match w/ If Expr
                 much of the following code this will be cleaned up by this process
                 ------------------*/
                 if let syn::Expr::Path(left_expr) = *bin_expr.left {
+                    let mut nested_path_cond = PathCond::new();
+                    Self::process_bin_op(syn::Expr::Path(left_expr.clone()), &mut nested_path_cond);
                     //dbg!(&left_expr);
                     // check Path {PathSegment} for Ident or literal
                     let cond = left_expr.path;
@@ -281,39 +288,53 @@ impl ExprAbstract {
                 }
                 /*------------------
                 here we need to get the op of the expression 
-                
                 ------------------*/
                 let bin_op = bin_expr.op;
                 path_cond.op = format!("{:?}", bin_op).into();
                 //dbg!(&bin_op);
             }
 
-        }
-        if let syn::Expr::While(while_expr) = expr.clone() {
-            println!("Expr::While");
-            path_cond.raw_expr = Some(syn::Expr::While(while_expr));
-        }
-        if let syn::Expr::Call(call_expr) = expr.clone() {
-            println!("Expr::Call");
-            //dbg!(&call_expr);
-            path_cond.raw_expr = Some(syn::Expr::Call(call_expr.clone()));
-            if let syn::Expr::Path(call_path) = *call_expr.func {
-                //dbg!(&left_expr);
-                // check Path {PathSegment} for Ident or literal,
-                let call = call_path.path;
-                //dbg!(&call);
-                if let syn::PathSegment{ident: path_id, ..} = &call.segments[0] {
-                    //dbg!(&path_id);
-                    let call_id = format!("{:?}", path_id);
-                    let call_id = LocalStmt::parse_ident(&call_id).expect("couldn't parse ident");
-                    path_cond.id = Some(call_id);
-                }                    
-            }
+        // }
+        // if let syn::Expr::While(while_expr) = expr.clone() {
+        //     println!("Expr::While");
+        //     path_cond.raw_expr = Some(syn::Expr::While(while_expr));
+        // }
+        // if let syn::Expr::Call(call_expr) = expr.clone() {
+        //     println!("Expr::Call");
+        //     //dbg!(&call_expr);
+        //     path_cond.raw_expr = Some(syn::Expr::Call(call_expr.clone()));
+        //     if let syn::Expr::Path(call_path) = *call_expr.func {
+        //         //dbg!(&left_expr);
+        //         // check Path {PathSegment} for Ident or literal,
+        //         let call = call_path.path;
+        //         //dbg!(&call);
+        //         if let syn::PathSegment{ident: path_id, ..} = &call.segments[0] {
+        //             //dbg!(&path_id);
+        //             let call_id = format!("{:?}", path_id);
+        //             let call_id = LocalStmt::parse_ident(&call_id).expect("couldn't parse ident");
+        //             path_cond.id = Some(call_id);
+        //         }                    
+        //     }
         }
 
         path_cond
     }
-    
+
+    /******************* 
+    after If expression is matched, we want to match the passed expr with either Path (identifier used) or Binary
+        - to process the (possibly) nested expressions w/in an if statement)
+    this should recursively check for Expr::Path or Expr::Binary in the left and right fields of the expr
+    *******************/
+    fn process_bin_op(expr: syn::Expr, path_cond: &mut PathCond) {
+        let expression = expr.clone();
+        // if ExprPath, extract identifier, op & check for left/right s
+        if let syn::Expr::Path(path) = expression {
+            dbg!(path);
+        // if ExprBinary, extract op, left/right exprs 
+        } else if let syn::Expr::Binary(bin_cond) = expression {
+            dbg!(bin_cond);
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -324,7 +345,7 @@ pub struct PathCond {
     op: Option<String>,
     op_type: Option<String>,
     right: Option<String>,
-    nested: Option<Box<PathCond>>,
+    nested: Option<Box<(PathCond, PathCond)>>,
 }
 impl fmt::Display for PathCond {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -5,212 +5,81 @@ expression is if
 expression is call
 -------------DEBUG-----------
 
-Expr::If
-[src/item_abs.rs:247:13] &if_expr = ExprIf {
+[src/item_abs.rs:253:17] &bin_expr = ExprBinary {
     attrs: [],
-    if_token: If,
-    cond: Expr::Binary {
+    left: Expr::Binary {
         attrs: [],
-        left: Expr::Binary {
+        left: Expr::Path {
             attrs: [],
-            left: Expr::Binary {
-                attrs: [],
-                left: Expr::Path {
-                    attrs: [],
-                    qself: None,
-                    path: Path {
-                        leading_colon: None,
-                        segments: [
-                            PathSegment {
-                                ident: Ident(
-                                    data,
-                                ),
-                                arguments: PathArguments::None,
-                            },
-                        ],
+            qself: None,
+            path: Path {
+                leading_colon: None,
+                segments: [
+                    PathSegment {
+                        ident: Ident(
+                            flag,
+                        ),
+                        arguments: PathArguments::None,
                     },
-                },
-                op: BinOp::Eq(
-                    EqEq,
-                ),
-                right: Expr::Lit {
-                    attrs: [],
-                    lit: Lit::Int {
-                        token: 23,
-                    },
-                },
-            },
-            op: BinOp::And(
-                AndAnd,
-            ),
-            right: Expr::Binary {
-                attrs: [],
-                left: Expr::Path {
-                    attrs: [],
-                    qself: None,
-                    path: Path {
-                        leading_colon: None,
-                        segments: [
-                            PathSegment {
-                                ident: Ident(
-                                    flag,
-                                ),
-                                arguments: PathArguments::None,
-                            },
-                        ],
-                    },
-                },
-                op: BinOp::Eq(
-                    EqEq,
-                ),
-                right: Expr::Lit {
-                    attrs: [],
-                    lit: Lit::Bool {
-                        value: false,
-                    },
-                },
+                ],
             },
         },
-        op: BinOp::Or(
-            OrOr,
+        op: BinOp::Eq(
+            EqEq,
         ),
         right: Expr::Lit {
             attrs: [],
             lit: Lit::Bool {
-                value: false,
+                value: true,
             },
         },
     },
-    then_branch: Block {
-        brace_token: Brace,
-        stmts: [
-            Stmt::Expr(
-                Expr::Call {
-                    attrs: [],
-                    func: Expr::Path {
-                        attrs: [],
-                        qself: None,
-                        path: Path {
-                            leading_colon: None,
-                            segments: [
-                                PathSegment {
-                                    ident: Ident(
-                                        process_data,
-                                    ),
-                                    arguments: PathArguments::None,
-                                },
-                            ],
-                        },
-                    },
-                    paren_token: Paren,
-                    args: [
-                        Expr::Reference {
-                            attrs: [],
-                            and_token: And,
-                            mutability: None,
-                            expr: Expr::Path {
-                                attrs: [],
-                                qself: None,
-                                path: Path {
-                                    leading_colon: None,
-                                    segments: [
-                                        PathSegment {
-                                            ident: Ident(
-                                                usr_data,
-                                            ),
-                                            arguments: PathArguments::None,
-                                        },
-                                    ],
-                                },
-                            },
-                        },
-                    ],
-                },
-                Some(
-                    Semi,
-                ),
-            ),
-        ],
-    },
-    else_branch: Some(
-        (
-            Else,
-            Expr::Block {
-                attrs: [],
-                label: None,
-                block: Block {
-                    brace_token: Brace,
-                    stmts: [
-                        Stmt::Expr(
-                            Expr::Call {
-                                attrs: [],
-                                func: Expr::Path {
-                                    attrs: [],
-                                    qself: None,
-                                    path: Path {
-                                        leading_colon: None,
-                                        segments: [
-                                            PathSegment {
-                                                ident: Ident(
-                                                    sanitize_secret,
-                                                ),
-                                                arguments: PathArguments::None,
-                                            },
-                                        ],
-                                    },
-                                },
-                                paren_token: Paren,
-                                args: [
-                                    Expr::Reference {
-                                        attrs: [],
-                                        and_token: And,
-                                        mutability: Some(
-                                            Mut,
-                                        ),
-                                        expr: Expr::Path {
-                                            attrs: [],
-                                            qself: None,
-                                            path: Path {
-                                                leading_colon: None,
-                                                segments: [
-                                                    PathSegment {
-                                                        ident: Ident(
-                                                            usr_data,
-                                                        ),
-                                                        arguments: PathArguments::None,
-                                                    },
-                                                ],
-                                            },
-                                        },
-                                    },
-                                ],
-                            },
-                            Some(
-                                Semi,
-                            ),
-                        ),
-                    ],
-                },
-            },
-        ),
+    op: BinOp::And(
+        AndAnd,
     ),
+    right: Expr::Binary {
+        attrs: [],
+        left: Expr::Path {
+            attrs: [],
+            qself: None,
+            path: Path {
+                leading_colon: None,
+                segments: [
+                    PathSegment {
+                        ident: Ident(
+                            data,
+                        ),
+                        arguments: PathArguments::None,
+                    },
+                ],
+            },
+        },
+        op: BinOp::Eq(
+            EqEq,
+        ),
+        right: Expr::Lit {
+            attrs: [],
+            lit: Lit::Int {
+                token: 12,
+            },
+        },
+    },
 }
 Expr{
         expr_type: IF
         path_cond: Expr{
         id: "None"
         left: ""
-        op: "BinOp::Or(OrOr)"
+        op: "BinOp::And(AndAnd)"
         right: ""
     }
     }
 
 
-Expr::Call
 Expr{
         expr_type: CALL
         path_cond: Expr{
-        id: "declassify"
+        id: "None"
         left: ""
         op: ""
         right: ""
