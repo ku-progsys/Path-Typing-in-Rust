@@ -326,6 +326,7 @@ impl ExprAbstract {
     this should recursively check for Expr::Path or Expr::Binary in the left and right fields of the expr
     *******************/
     fn process_bin_op(expr: syn::Expr, path_cond: &mut PathCond) {
+        println!("in process bin op");
         let expression = expr.clone();
         // if ExprPath, extract identifier, op & check for left/right s
         if let syn::Expr::Path(path) = expression {
