@@ -5,84 +5,97 @@ expression is if
 expression is call
 -------------DEBUG-----------
 
-[src/item_abs.rs:253:17] &bin_expr = ExprBinary {
-    attrs: [],
-    left: Expr::Binary {
-        attrs: [],
-        left: Expr::Path {
+in process bin op
+[src/item_abs.rs:380:13] &path_cond = PathCond {
+    raw_expr: Some(
+        Expr::Binary {
             attrs: [],
-            qself: None,
-            path: Path {
-                leading_colon: None,
-                segments: [
-                    PathSegment {
-                        ident: Ident(
-                            flag,
-                        ),
-                        arguments: PathArguments::None,
-                    },
-                ],
+            left: Expr::Path {
+                attrs: [],
+                qself: None,
+                path: Path {
+                    leading_colon: None,
+                    segments: [
+                        PathSegment {
+                            ident: Ident(
+                                flag,
+                            ),
+                            arguments: PathArguments::None,
+                        },
+                    ],
+                },
+            },
+            op: BinOp::Eq(
+                EqEq,
+            ),
+            right: Expr::Lit {
+                attrs: [],
+                lit: Lit::Bool {
+                    value: true,
+                },
             },
         },
-        op: BinOp::Eq(
-            EqEq,
-        ),
-        right: Expr::Lit {
-            attrs: [],
-            lit: Lit::Bool {
-                value: true,
-            },
-        },
-    },
-    op: BinOp::And(
-        AndAnd,
     ),
-    right: Expr::Binary {
-        attrs: [],
-        left: Expr::Path {
-            attrs: [],
-            qself: None,
-            path: Path {
-                leading_colon: None,
-                segments: [
-                    PathSegment {
-                        ident: Ident(
-                            data,
-                        ),
-                        arguments: PathArguments::None,
-                    },
-                ],
+    id: None,
+    left: Some(
+        "Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }",
+    ),
+    op: Some(
+        "BinOp::Eq(EqEq)",
+    ),
+    op_type: Some(
+        "",
+    ),
+    right: Some(
+        "Expr::Lit { attrs: [], lit: Lit::Bool { value: true } }",
+    ),
+    nested: None,
+}
+left path expr
+[src/item_abs.rs:387:17] &nested = ExprPath {
+    attrs: [],
+    qself: None,
+    path: Path {
+        leading_colon: None,
+        segments: [
+            PathSegment {
+                ident: Ident(
+                    flag,
+                ),
+                arguments: PathArguments::None,
             },
-        },
-        op: BinOp::Eq(
-            EqEq,
-        ),
-        right: Expr::Lit {
-            attrs: [],
-            lit: Lit::Int {
-                token: 12,
-            },
-        },
+        ],
+    },
+}
+in process bin op
+right literal expr
+[src/item_abs.rs:400:17] &nested = ExprLit {
+    attrs: [],
+    lit: Lit::Bool {
+        value: true,
     },
 }
 Expr{
         expr_type: IF
         path_cond: Expr{
         id: "None"
-        left: ""
+        left: "Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Bool { value: true } } }"
         op: "BinOp::And(AndAnd)"
-        right: ""
+        right: "Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(data), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Int { token: 12 } } }"
+        nested: Some((PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None }, PathCond { raw_expr: Some(Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Bool { value: true } } }), id: Some("ExprLit { attrs: [], lit: Lit::Bool { value: true } }"), left: Some("Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }"), op: Some("BinOp::Eq(EqEq)"), op_type: Some(""), right: Some("Expr::Lit { attrs: [], lit: Lit::Bool { value: true } }"), nested: Some((PathCond { raw_expr: Some(Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }), id: Some("flag"), left: None, op: None, op_type: None, right: None, nested: None }, PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None })) }))
     }
     }
 
 
+Expr::Call
 Expr{
         expr_type: CALL
         path_cond: Expr{
-        id: "None"
+        id: "declassify"
         left: ""
         op: ""
         right: ""
+        nested: None
     }
     }
 
