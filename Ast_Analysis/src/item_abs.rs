@@ -7,13 +7,13 @@ use std::fmt;
 #[derive(Debug)]
 enum LocalType {
     LOCAL,
-    NOT_TRACKED,
+    NotTracked,
 }
 #[derive(Debug, Clone)]
 enum Datatype {
     INT32,
     STRING,
-    NOT_TRACKED,
+    NotTracked,
 }
 
 
@@ -126,7 +126,7 @@ impl fmt::Display for LocalStmt {
             } else {
                 println!("local type not matched with raw_stmt");
             }
-            Datatype::NOT_TRACKED
+            Datatype::NotTracked
         }
     }
 /*--------------------------------
@@ -137,7 +137,7 @@ enum ExprType {
     CALL,
     IF,
     WHILE,
-    NOT_TRACKED,
+    NotTracked,
 }
 
 #[derive(Debug)]
@@ -208,7 +208,7 @@ impl ExprAbstract {
             _ => {
                 println!("not in ExprType");
                 let formatted_expr = format!("{:?}", process_expr);
-                let expr_type = ExprType::NOT_TRACKED;
+                let expr_type = ExprType::NotTracked;
                 Self {
                     raw_expr: process_expr,
                     expr_type: expr_type,
