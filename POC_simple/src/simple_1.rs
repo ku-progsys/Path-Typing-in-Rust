@@ -2,7 +2,7 @@
 pub fn run_simple1(flag: bool) {
     let mut usr_data: String = get_usr_data();
     let data: i32 = 12;
-    if flag == true && data == 12 { // make implicit example similar 
+    if flag == true && data == 12{ // make implicit example similar 
         process_data(&usr_data);
     }
     else {
