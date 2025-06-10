@@ -1,5 +1,6 @@
 use syn::Expr;
 use std::fmt;
+use syn::Token;
 
 /*--------------------------------
     there are many more expression types that will need to be added in the future
@@ -43,7 +44,7 @@ impl fmt::Display for LocalStmt {
         pub fn new(process_stmt: syn::Local) -> Self {
             match process_stmt {
                 syn::Local{..} => {
-                    println!("stmt is Local data");
+                    // println!("stmt is Local data");
                     let type_of_stmt = LocalType::LOCAL;
                     let formatted_stmt = format!("{:?}", process_stmt);
                     let local_id = Self::id_local(syn::Stmt::Local(process_stmt.clone()));
@@ -147,14 +148,20 @@ pub struct ExprAbstract {
     fmt_expr: Option<String>,
     path_cond: Option<PathCond>,
     fn_called: Option<String>,
-    branch: Option<Vec<syn::Expr>>,
+    then_branch: Option<syn::Block>,
+    else_branch: Option<Option<(Token![else], Box<Expr>)>>
 }
 impl fmt::Display for ExprAbstract {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, r#"Expr{{
         expr_type: {:?}
         path_cond: {}
-    }}"#, self.expr_type, self.path_cond.clone().unwrap())
+        then_branch: {:?}
+        else_branch: {:?}
+    }}"#, self.expr_type,
+          self.path_cond.clone().unwrap(),
+          self.then_branch.clone().ok_or("None"),
+          self.else_branch.clone().ok_or("None"))
     }
 }
 
@@ -166,7 +173,7 @@ impl ExprAbstract {
         // match on expr type, set type, call fns to process specific expr types
         match process_expr {
             syn::Expr::Call{..} => {
-                println!("expression is call");
+                // println!("expression is call");
                 let formatted_expr = format!("{:?}", process_expr);
                 let expr_type = ExprType::CALL;
                 Self {
@@ -175,11 +182,12 @@ impl ExprAbstract {
                     fmt_expr: Some(formatted_expr),
                     path_cond: None,
                     fn_called: None,     
-                    branch: None,           
+                    then_branch: None,           
+                    else_branch: None,           
                 }
             }
             syn::Expr::If {..} => {
-                println!("expression is if");
+                // println!("expression is if");
                 let formatted_expr = format!("{:?}", process_expr);
                 let expr_type = ExprType::IF;
                 Self {
@@ -188,7 +196,8 @@ impl ExprAbstract {
                     fmt_expr: Some(formatted_expr),
                     path_cond: Some(PathCond::new()),
                     fn_called: None,
-                    branch: None,    
+                    then_branch: None,           
+                    else_branch: None,       
                                 
                 }
             }
@@ -202,7 +211,8 @@ impl ExprAbstract {
                     fmt_expr: Some(formatted_expr),
                     path_cond: Some(PathCond::new()),
                     fn_called: None,
-                    branch: None,                
+                    then_branch: None,           
+                    else_branch: None,                   
                 }
             }
             _ => {
@@ -215,7 +225,8 @@ impl ExprAbstract {
                     fmt_expr: None,
                     path_cond: None,
                     fn_called: None,
-                    branch: None,
+                    then_branch: None,           
+                    else_branch: None,   
                 }
             }
         }
@@ -234,6 +245,10 @@ impl ExprAbstract {
         path_condition = Self::process_cond(self.raw_expr.clone(), &mut path_condition);
         //dbg!(&path_condition);
         self.path_cond = Some(path_condition);
+        if let syn::Expr::If(if_expr) = self.raw_expr.clone() {
+            self.then_branch = Some(if_expr.then_branch);
+            self.else_branch = Some(if_expr.else_branch);
+        }
     }
 
     /*----------------------------
@@ -244,7 +259,7 @@ impl ExprAbstract {
         let mut path_cond = path_condition.clone();
         if let syn::Expr::If(if_expr) = expr.clone() {
             //println!("Expr::If");
-            //dbg!(&if_expr);
+            // dbg!(&if_expr);
             let next_expr = if_expr.clone();
             path_cond.raw_expr = Some(syn::Expr::If(if_expr.clone()));
             // cond can be either Path or Binary 
@@ -317,11 +332,11 @@ impl ExprAbstract {
 
         }
         if let syn::Expr::While(while_expr) = expr.clone() {
-            println!("Expr::While");
+            // println!("Expr::While");
             path_cond.raw_expr = Some(syn::Expr::While(while_expr));
         }
         if let syn::Expr::Call(call_expr) = expr.clone() {
-            println!("Expr::Call");
+            // println!("Expr::Call");
             //dbg!(&call_expr);
             path_cond.raw_expr = Some(syn::Expr::Call(call_expr.clone()));
             if let syn::Expr::Path(call_path) = *call_expr.func {
@@ -347,7 +362,7 @@ impl ExprAbstract {
     this should recursively check for Expr::Path or Expr::Binary in the left and right fields of the expr
     *******************/
     fn process_bin_op(expr: syn::Expr, path_cond: &mut PathCond) {
-        println!("in process bin op");
+        // println!("in process bin op");
         //dbg!(&expr);
         let expression = expr.clone();
         path_cond.raw_expr = Some(expr);
@@ -377,27 +392,27 @@ impl ExprAbstract {
             path_cond.right = Some(format!("{:?}", bin_cond.right));
             
             path_cond.op = Some(format!("{:?}", bin_op)); 
-            dbg!(&path_cond);
+            // dbg!(&path_cond);
             if let syn::Expr::Binary(nested) = *bin_cond.left {
-                println!("left binary expr");
-                dbg!(&nested);
+                // println!("left binary expr");
+                // dbg!(&nested);
                 Self::process_bin_op(syn::Expr::Binary(nested), &mut nested_left);
             } else if let syn::Expr::Path(nested) = *bin_cond.left {
-                println!("left path expr");
-                dbg!(&nested);
+                // println!("left path expr");
+                // dbg!(&nested);
                 Self::process_bin_op(syn::Expr::Path(nested), &mut nested_left);
             }
             if let syn::Expr::Binary(nested) = *bin_cond.right {
-                println!("right binary expr");
-                dbg!(&nested);
+                // println!("right binary expr");
+                // dbg!(&nested);
                 Self::process_bin_op(syn::Expr::Binary(nested), &mut nested_right);
             } else if let syn::Expr::Path(nested) = *bin_cond.right {
-                println!("right path expr");
-                dbg!(&nested);
+                // println!("right path expr");
+                // dbg!(&nested);
                 Self::process_bin_op(syn::Expr::Path(nested), &mut nested_right);
             } else if let syn::Expr::Lit(nested) = *bin_cond.right {
-                println!("right literal expr");
-                dbg!(&nested);
+                // println!("right literal expr");
+                // dbg!(&nested);
                 path_cond.id = Some(format!("{:?}", nested));
             }
             path_cond.nested = Some(Box::new((nested_left, nested_right)));
