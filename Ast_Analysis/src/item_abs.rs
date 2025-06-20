@@ -133,7 +133,7 @@ impl fmt::Display for LocalStmt {
 /*--------------------------------
 this will be a custom enum for easier information extraction from syn::Exprs 
 --------------------------------*/
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum ExprType {
     CALL,
     IF,
@@ -141,7 +141,7 @@ enum ExprType {
     NotTracked,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ExprAbstract {
     raw_expr: syn::Expr,
     expr_type: ExprType, 
@@ -418,6 +418,17 @@ impl ExprAbstract {
             path_cond.nested = Some(Box::new((nested_left, nested_right)));
         }
         //dbg!(&path_cond);
+    }
+
+    pub fn is_declassify(self) -> bool {
+        match self.expr_type {
+            ExprType::CALL => {
+                return true;
+            }
+            _ => {
+                return false;
+            }
+        }
     }
 }
 

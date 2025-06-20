@@ -1,80 +1,142 @@
 4
-stmt is Local data
-stmt is Local data
-expression is if
-expression is call
 -------------DEBUG-----------
 
-in process bin op
-[src/item_abs.rs:380:13] &path_cond = PathCond {
-    raw_expr: Some(
-        Expr::Binary {
+[src/main.rs:32:5] locals = [
+    LocalStmt {
+        raw_stmt: Stmt::Local {
             attrs: [],
-            left: Expr::Path {
+            let_token: Let,
+            pat: Pat::Type {
                 attrs: [],
-                qself: None,
-                path: Path {
-                    leading_colon: None,
-                    segments: [
-                        PathSegment {
-                            ident: Ident(
-                                flag,
-                            ),
-                            arguments: PathArguments::None,
+                pat: Pat::Ident {
+                    attrs: [],
+                    by_ref: None,
+                    mutability: Some(
+                        Mut,
+                    ),
+                    ident: Ident(
+                        usr_data,
+                    ),
+                    subpat: None,
+                },
+                colon_token: Colon,
+                ty: Type::Path {
+                    qself: None,
+                    path: Path {
+                        leading_colon: None,
+                        segments: [
+                            PathSegment {
+                                ident: Ident(
+                                    String,
+                                ),
+                                arguments: PathArguments::None,
+                            },
+                        ],
+                    },
+                },
+            },
+            init: Some(
+                LocalInit {
+                    eq_token: Eq,
+                    expr: Expr::Call {
+                        attrs: [],
+                        func: Expr::Path {
+                            attrs: [],
+                            qself: None,
+                            path: Path {
+                                leading_colon: None,
+                                segments: [
+                                    PathSegment {
+                                        ident: Ident(
+                                            get_usr_data,
+                                        ),
+                                        arguments: PathArguments::None,
+                                    },
+                                ],
+                            },
                         },
-                    ],
+                        paren_token: Paren,
+                        args: [],
+                    },
+                    diverge: None,
                 },
-            },
-            op: BinOp::Eq(
-                EqEq,
             ),
-            right: Expr::Lit {
+            semi_token: Semi,
+        },
+        stmt_type: LOCAL,
+        fmt_stmt: Some(
+            "Local { attrs: [], let_token: Let, pat: Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: Some(Mut), ident: Ident(usr_data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(String), arguments: PathArguments::None }] } } }, init: Some(LocalInit { eq_token: Eq, expr: Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(get_usr_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [] }, diverge: None }), semi_token: Semi }",
+        ),
+        id: Some(
+            "usr_data",
+        ),
+        value_type: Some(
+            STRING,
+        ),
+        taint: Some(
+            false,
+        ),
+    },
+    LocalStmt {
+        raw_stmt: Stmt::Local {
+            attrs: [],
+            let_token: Let,
+            pat: Pat::Type {
                 attrs: [],
-                lit: Lit::Bool {
-                    value: true,
+                pat: Pat::Ident {
+                    attrs: [],
+                    by_ref: None,
+                    mutability: None,
+                    ident: Ident(
+                        data,
+                    ),
+                    subpat: None,
+                },
+                colon_token: Colon,
+                ty: Type::Path {
+                    qself: None,
+                    path: Path {
+                        leading_colon: None,
+                        segments: [
+                            PathSegment {
+                                ident: Ident(
+                                    i32,
+                                ),
+                                arguments: PathArguments::None,
+                            },
+                        ],
+                    },
                 },
             },
+            init: Some(
+                LocalInit {
+                    eq_token: Eq,
+                    expr: Expr::Lit {
+                        attrs: [],
+                        lit: Lit::Int {
+                            token: 12,
+                        },
+                    },
+                    diverge: None,
+                },
+            ),
+            semi_token: Semi,
         },
-    ),
-    id: None,
-    left: Some(
-        "Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }",
-    ),
-    op: Some(
-        "BinOp::Eq(EqEq)",
-    ),
-    op_type: Some(
-        "",
-    ),
-    right: Some(
-        "Expr::Lit { attrs: [], lit: Lit::Bool { value: true } }",
-    ),
-    nested: None,
-}
-left path expr
-[src/item_abs.rs:387:17] &nested = ExprPath {
-    attrs: [],
-    qself: None,
-    path: Path {
-        leading_colon: None,
-        segments: [
-            PathSegment {
-                ident: Ident(
-                    flag,
-                ),
-                arguments: PathArguments::None,
-            },
-        ],
+        stmt_type: LOCAL,
+        fmt_stmt: Some(
+            "Local { attrs: [], let_token: Let, pat: Pat::Type { attrs: [], pat: Pat::Ident { attrs: [], by_ref: None, mutability: None, ident: Ident(data), subpat: None }, colon_token: Colon, ty: Type::Path { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(i32), arguments: PathArguments::None }] } } }, init: Some(LocalInit { eq_token: Eq, expr: Expr::Lit { attrs: [], lit: Lit::Int { token: 12 } }, diverge: None }), semi_token: Semi }",
+        ),
+        id: Some(
+            "data",
+        ),
+        value_type: Some(
+            INT32,
+        ),
+        taint: Some(
+            false,
+        ),
     },
-}
-in process bin op
-right literal expr
-[src/item_abs.rs:400:17] &nested = ExprLit {
-    attrs: [],
-    lit: Lit::Bool {
-        value: true,
-    },
-}
+]
 Expr{
         expr_type: IF
         path_cond: Expr{
@@ -84,10 +146,11 @@ Expr{
         right: "Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(data), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Int { token: 12 } } }"
         nested: Some((PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None }, PathCond { raw_expr: Some(Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Bool { value: true } } }), id: Some("ExprLit { attrs: [], lit: Lit::Bool { value: true } }"), left: Some("Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }"), op: Some("BinOp::Eq(EqEq)"), op_type: Some(""), right: Some("Expr::Lit { attrs: [], lit: Lit::Bool { value: true } }"), nested: Some((PathCond { raw_expr: Some(Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }), id: Some("flag"), left: None, op: None, op_type: None, right: None, nested: None }, PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None })) }))
     }
+        then_branch: Ok(Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(process_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] })
+        else_branch: Ok(Some((Else, Expr::Block { attrs: [], label: None, block: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(sanitize_secret), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: Some(Mut), expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] } })))
     }
 
 
-Expr::Call
 Expr{
         expr_type: CALL
         path_cond: Expr{
@@ -97,6 +160,34 @@ Expr{
         right: ""
         nested: None
     }
+        then_branch: Err("None")
+        else_branch: Err("None")
     }
 
 
+path_to_classify[0]
+Expr{
+        expr_type: IF
+        path_cond: Expr{
+        id: "None"
+        left: "Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Bool { value: true } } }"
+        op: "BinOp::And(AndAnd)"
+        right: "Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(data), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Int { token: 12 } } }"
+        nested: Some((PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None }, PathCond { raw_expr: Some(Expr::Binary { attrs: [], left: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }, op: BinOp::Eq(EqEq), right: Expr::Lit { attrs: [], lit: Lit::Bool { value: true } } }), id: Some("ExprLit { attrs: [], lit: Lit::Bool { value: true } }"), left: Some("Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }"), op: Some("BinOp::Eq(EqEq)"), op_type: Some(""), right: Some("Expr::Lit { attrs: [], lit: Lit::Bool { value: true } }"), nested: Some((PathCond { raw_expr: Some(Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(flag), arguments: PathArguments::None }] } }), id: Some("flag"), left: None, op: None, op_type: None, right: None, nested: None }, PathCond { raw_expr: None, id: None, left: Some(""), op: Some(""), op_type: Some(""), right: Some(""), nested: None })) }))
+    }
+        then_branch: Ok(Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(process_data), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: None, expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] })
+        else_branch: Ok(Some((Else, Expr::Block { attrs: [], label: None, block: Block { brace_token: Brace, stmts: [Stmt::Expr(Expr::Call { attrs: [], func: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(sanitize_secret), arguments: PathArguments::None }] } }, paren_token: Paren, args: [Expr::Reference { attrs: [], and_token: And, mutability: Some(Mut), expr: Expr::Path { attrs: [], qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident(usr_data), arguments: PathArguments::None }] } } }] }, Some(Semi))] } })))
+    }
+path_to_classify[1]
+Expr{
+        expr_type: CALL
+        path_cond: Expr{
+        id: "declassify"
+        left: ""
+        op: ""
+        right: ""
+        nested: None
+    }
+        then_branch: Err("None")
+        else_branch: Err("None")
+    }

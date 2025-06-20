@@ -1,5 +1,7 @@
 use syn::{File};
 
+use crate::analysis::is_declassify;
+
 mod analysis;
 mod item_abs;
 fn main() {
@@ -27,12 +29,29 @@ fn main() {
     println!("-------------DEBUG-----------\n");
     //println!("{}", locals[0]);
     //println!("{}", locals[1]);
-    //dbg!(locals);
+    dbg!(locals);
     //dbg!(exprs);
     //dbg!(&exprs);
+    let mut path_to_declassify: Vec<item_abs::ExprAbstract> = vec![];
+    let mut path_to_implicit_flow: Vec<item_abs::ExprAbstract> = vec![];
     for i in 0..exprs.len() {
         //dbg!(&exprs[i]);
         exprs[i].get_path_cond();
-        println!("{}\n\n", exprs[i]);
+        println!("{}\n\n", exprs[i].clone());
+        // checks for declassify function calls
+        if exprs[i].clone().is_declassify() {
+            for x in 0..i+1 {
+                path_to_declassify.push(exprs[x].clone());
+                println!("path_to_classify[{}]\n{}",x, path_to_declassify[x]);
+            }
+        }
     }
+    //dbg!(path_to_declassify);
+    // after this point, we should go through our expressions, check the expression type, 
+    // if its a conditional, then we'll go through the condition, and check if a secret value is used 
+    
+
+
+    // after checking conditionals, then we need to check any then and else branches for the conditional
+
 }
