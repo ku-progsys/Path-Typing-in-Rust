@@ -1,8 +1,12 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where 
 
 import LIO
 import LIO.TCB
 import LIO.DCLabel
+import System.Environment (getArgs)
+import Data.Maybe (fromMaybe)
+
 
 -- | Simple secrecy component example
 s :: CNF
@@ -22,26 +26,31 @@ l2 = "Djon" %% "Alice"
 
 -- | Creating privilege using constructor from TCB
 p :: DCPriv
-p = PrivTCB  $ "Alice" /\ "Carla"
+p = PrivTCB $ "Alice" /\ "Carla"
+
+-- | Sanitize function (example transformation: strip integrity)
+sanitize :: DCLabel -> DCLabel
+sanitize (DCLabel s' _) = DCLabel s' cTrue -- keep secrecy, discard integrity
+
+-- | Declassify function (example: reduce secrecy using privileges)
+declassify :: DCPriv -> DCLabel -> DCLabel
+declassify = downgradeP
+
+
 
 main :: IO ()
 main = do
-  putStrLn $ "Label 1: " ++ show l1
-  putStrLn $ "Label 2: " ++ show l2
-  putStrLn $ "Join of labels: " ++ show (l1 `lub` l2)
-  putStrLn $ "Meet of labels: " ++ show (l1 `glb` l2)
-  putStrLn $ "Privileges: " ++ show p
-  putStrLn $ "Label 1 flows to Label 2? " ++ (show $ canFlowTo l1 l2)
-  putStrLn $ "Label 1 flows to Label 2 given privileges? " ++
-             (show $ canFlowToP p l1 l2)
-{-
-Output:
-ghci> main
-Label 1: "Carla" /\ ("Alice" \/ "Bob") %% "Alice" /\ "Carla"
-Label 2: "Djon" %% "Alice"
-Join of labels: "Carla" /\ "Djon" /\ ("Alice" \/ "Bob") %% "Alice"
-Meet of labels: ("Carla" \/ "Djon") /\ ("Alice" \/ "Bob" \/ "Djon") %% "Alice" /\ "Carla"
-Privileges: PrivTCB ("Alice" /\ "Carla")
-Label 1 flows to Label 2? False
-Label 1 flows to Label 2 given privileges? True
--}
+  args <- getArgs
+  let shouldSanitize = case args of
+                         ("sanitize":_) -> True
+                         _              -> False
+
+  let labelBefore = l1
+  let labelUsed = if shouldSanitize then sanitize labelBefore else labelBefore
+
+  let declassifiedLabel =
+        if shouldSanitize
+           then declassify p labelUsed  -- Declassify only if sanitize path taken
+           else labelUsed               -- No declassification allowed
+
+  putStrLn $ "Declassified label: " ++ show declassifiedLabel
